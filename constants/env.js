@@ -1,0 +1,1 @@
+export const app_uri = 'http://localhost:8080';
