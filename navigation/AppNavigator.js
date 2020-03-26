@@ -124,6 +124,9 @@ const ProfileNavigator = createStackNavigator({
 	Profile: {
 		screen: ProfileScreen
 	},
+	RoadmapDetails: {
+		screen: RoadmapDetailsScreen
+	},
 	CreateRoadmap: {
 		screen: CreateRoadmapScreen
 	},
