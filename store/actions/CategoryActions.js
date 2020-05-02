@@ -79,22 +79,30 @@ export const categoryError = (error) => {
 
 export const getCategories = () => {
 	return (dispatch) => {
+		// Loading for frontend
+		dispatch({ type: CATEGORY_LOADING, payload: true });
+
+		// GET Request
 		axios.get(app_uri + '/api/categories/get').then(function(response) {
 			if (response.data['success'] == true) {
-				// Data
+				// Save categories
 				dispatch({ type: GET_CATEGORIES, payload: response.data['categories'] });
 
-				// Directional
+				// Directional data
 				dispatch({ type: CATEGORY_DIRECTION, payload: 'get_categories' });
 				dispatch({ type: CATEGORY_SUCCESS, payload: true });
 				dispatch({ type: CATEGORY_LOADING, payload: false });
 			} else {
-				// Directional
+				// Directional data
 				dispatch({ type: CATEGORY_ERROR, payload: response.data['error'] });
 				dispatch({ type: CATEGORY_LOADING, payload: false });
 			}
 		}).catch(function(error) {
-			// Directional
+			// Console log error
+			console.log('[ERROR] - Error within the `getCategories` action.');
+			console.log(error);
+
+			// Directional data
 			dispatch({ type: CATEGORY_ERROR, payload: error });
 			dispatch({ type: CATEGORY_LOADING, payload: false });
 		});

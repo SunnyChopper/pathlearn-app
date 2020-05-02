@@ -1,19 +1,36 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { AppLoading } from 'expo';
+import * as Font from 'expo-font';
+import ReduxThunk from 'redux-thunk';
+import MasterNavigator from './navigation/MasterNavigator';
+
+
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import RootReducer from './store/reducers/RootReducer';
+
+const store = createStore(RootReducer, applyMiddleware(ReduxThunk));
+
+const fetchFonts = () => {
+	return Font.loadAsync({
+		'montserrat' : require('./assets/fonts/Montserrat-Regular.ttf'),
+		'montserrat-bold' : require('./assets/fonts/Montserrat-Bold.ttf'),
+		'montserrat-light' : require('./assets/fonts/Montserrat-Light.ttf')
+	});
+};
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
-  );
-}
+	const [fontLoaded, setFontLoaded] = useState(false);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+	if (!fontLoaded) {
+		return (
+			<AppLoading startAsync={fetchFonts} onFinish={() => { setFontLoaded(true); }} />
+		);
+	}
+
+	return (
+		<Provider store={store}>
+			<MasterNavigator />
+		</Provider>
+	);
+}

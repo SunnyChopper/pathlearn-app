@@ -18,8 +18,9 @@ import { useDispatch } from 'react-redux';
 import OnboardingScreen from '../screens/guest/OnboardingScreen';
 import LoginScreen from '../screens/guest/LoginScreen';
 import RegisterScreen from '../screens/guest/RegisterScreen';
-import IntroQuizScreen from '../screens/guest/IntroQuizScreen';
-import RecommendationsScreen from '../screens/member/RecommendationScreen';
+import IntroQuizScreen from '../screens/member/IntroQuizScreen';
+import SelectCategoriesScreen from '../screens/member/SelectCategoriesScreen';
+import RecommendationsScreen from '../screens/member/RecommendationsScreen';
 import RoadmapOverviewScreen from '../screens/member/RoadmapOverviewScreen';
 import RoadmapEnrollmentScreen from '../screens/member/RoadmapEnrollmentScreen';
 import RoadmapDetailsScreen from '../screens/member/RoadmapDetailsScreen';
@@ -27,8 +28,8 @@ import ContentScreen from '../screens/member/ContentScreen';
 import SearchScreen from '../screens/member/SearchScreen';
 import EnrolledScreen from '../screens/member/EnrolledScreen';
 import ProfileScreen from '../screens/member/ProfileScreen';
-import CreateRoadmapScreen from '../screens/members/CreateRoadmapScreen';
-import CreateSectionsScreen from '../screens/members/CreateSectionsScreen';
+import CreateRoadmapScreen from '../screens/member/CreateRoadmapScreen';
+import CreateSectionScreen from '../screens/member/CreateSectionScreen';
 
 /* ---------------------- *\
 |	Constants              |
@@ -69,69 +70,127 @@ const GuestNavigator = createSwitchNavigator({
 	},
 	Quiz: {
 		screen: IntroQuizScreen
+	},
+	Categories: {
+		screen: SelectCategoriesScreen
 	}
 });
 
 const RecommendationsNavigator = createStackNavigator({
 	Recommendations: {
-		screen: RecommendationsScreen
+		screen: RecommendationsScreen,
+		navigationOptions: {
+			headerShown: false
+		}
 	},
 	RoadmapOverview: {
 		screen: RoadmapOverviewScreen
 	},
 	RoadmapEnrollment: {
-		screen, RoadmapEnrollmentScreen
+		screen: RoadmapEnrollmentScreen,
+		navigationOptions: {
+			headerShown: false
+		}
 	},
 	RoadmapDetails: {
 		screen: RoadmapDetailsScreen
 	},
 	Content: {
-		screen: ContentScreen
+		screen: ContentScreen,
+		navigationOptions: {
+			headerBackTitle: 'Back'
+		}
 	}
 });
 
 const SearchNavigator = createStackNavigator({
 	Search: {
-		screen: SearchScreen
+		screen: SearchScreen,
+		navigationOptions: {
+			headerShown: false
+		}
 	},
 	RoadmapOverview: {
-		screen: RoadmapOverviewScreen
+		screen: RoadmapOverviewScreen,
+		
 	},
 	RoadmapEnrollment: {
-		screen: RoadmapEnrollmentScreen
+		screen: RoadmapEnrollmentScreen,
+		navigationOptions: {
+			headerShown: false
+		}
 	},
 	RoadmapDetails: {
-		screen: RoadmapDetailsScreen
+		screen: RoadmapDetailsScreen,
+		navigationOptions: {
+			headerBackTitle: 'Back'
+		}
 	},
 	Content: {
-		screen: ContentScreen
+		screen: ContentScreen,
+		navigationOptions: {
+			headerBackTitle: 'Back'
+		}
 	}
 });
 
 const EnrolledNavigator = createStackNavigator({
 	Enrolled: {
-		screen: EnrolledScreen
+		screen: EnrolledScreen,
+		navigationOptions: {
+			headerShown: false
+		}
+	},
+	RoadmapOverview: {
+		screen: RoadmapOverviewScreen,
+		navigationOptions: {
+			headerBackTitle: 'Back'
+		}
 	},
 	RoadmapDetails: {
-		screen: RoadmapDetailsScreen
+		screen: RoadmapDetailsScreen,
+		navigationOptions: {
+			headerBackTitle: 'Back'
+		}
 	},
 	Content: {
-		screen: ContentScreen
+		screen: ContentScreen,
+		navigationOptions: {
+			headerBackTitle: 'Back'
+		}
 	}
 });
 
 const ProfileNavigator = createStackNavigator({
 	Profile: {
-		screen: ProfileScreen
+		screen: ProfileScreen,
+		navigationOptions: {
+			headerShown: false
+		}
+	},
+	RoadmapOverview: {
+		screen: RoadmapOverviewScreen,
+		navigationOptions: {
+			headerBackTitle: 'Back'
+		}
 	},
 	RoadmapDetails: {
-		screen: RoadmapDetailsScreen
+		screen: RoadmapDetailsScreen,
+		navigationOptions: {
+			headerBackTitle: 'Back'
+		}
 	},
 	CreateRoadmap: {
-		screen: CreateRoadmapScreen
+		screen: CreateRoadmapScreen,
+		navigationOptions: {
+			headerBackTitle: 'Back'
+		}
 	},
-	CreateSections: {
-		screen: CreateSectionsScreen
+	CreateSection: {
+		screen: CreateSectionScreen,
+		navigationOptions: {
+			headerBackTitle: 'Back'
+		}
 	}
 });
 
@@ -142,22 +201,40 @@ const ProfileNavigator = createStackNavigator({
 const homeTabConfig = {
 	Recommendations: {
 		screen: RecommendationsNavigator,
-		navigationOptions: {
-			tabBarIcon: tabInfo => {
-				return (<Ionicons name="ios-paper" size={25} color={tabInfo.tintColor} />);
-			},
-			tabBarColor: Colors.primary,
-			tabBarLabel: Platform.OS === 'android' ? (<Text style={{ fontFamily: 'montserrat' }}>Recommendations</Text>) : ('Recommendations')
+		navigationOptions: ({navigation}) => {
+			let { routeName } = navigation.state.routes[navigation.state.index];
+			let navigationOptions = {
+				tabBarIcon: tabInfo => {
+					return (<Ionicons name="ios-paper" size={25} color={tabInfo.tintColor} />);
+				},
+				tabBarColor: Colors.primary,
+				tabBarLabel: Platform.OS === 'android' ? (<Text style={{ fontFamily: 'montserrat' }}>Home</Text>) : ('Home')
+			};
+
+			if (routeName === 'RoadmapEnrollment') {
+				navigationOptions.tabBarVisible = false;
+			}
+
+			return navigationOptions;
 		}
 	},
 	Search: {
 		screen: SearchNavigator,
-		navigationOptions: {
-			tabBarIcon: tabInfo => {
-				return (<Ionicons name="ios-search" size={25} color={tabInfo.tintColor} />);
-			},
-			tabBarColor: Colors.primary,
-			tabBarLabel: Platform.OS === 'android' ? (<Text style={{ fontFamily: 'montserrat' }}>Search</Text>) : ('Search')
+		navigationOptions: ({navigation}) => {
+			let { routeName } = navigation.state.routes[navigation.state.index];
+			let navigationOptions = {
+				tabBarIcon: tabInfo => {
+					return (<Ionicons name="ios-search" size={25} color={tabInfo.tintColor} />);
+				},
+				tabBarColor: Colors.primary,
+				tabBarLabel: Platform.OS === 'android' ? (<Text style={{ fontFamily: 'montserrat' }}>Search</Text>) : ('Search')
+			};
+
+			if (routeName === 'RoadmapEnrollment') {
+				navigationOptions.tabBarVisible = false;
+			}
+
+			return navigationOptions;
 		}
 	},
 	Enrolled: {
@@ -167,14 +244,14 @@ const homeTabConfig = {
 				return (<Ionicons name="ios-ribbon" size={25} color={tabInfo.tintColor} />);
 			},
 			tabBarColor: Colors.primary,
-			tabBarLabel: Platform.OS === 'android' ? (<Text style={{ fontFamily: 'montserrat' }}>Enrolled</Text>) : ('Enrolled')
+			tabBarLabel: Platform.OS === 'android' ? (<Text style={{ fontFamily: 'montserrat' }}>Enrolled</Text>) : ('Enrolled'),
 		}
 	},
 	Profile: {
 		screen: ProfileNavigator,
 		navigationOptions: {
 			tabBarIcon: tabInfo => {
-				return (<Ionicons name="ios-user" size={25} color={tabInfo.tintColor} />);
+				return (<Ionicons name="ios-person" size={25} color={tabInfo.tintColor} />);
 			},
 			tabBarColor: Colors.primary,
 			tabBarLabel: Platform.OS === 'android' ? (<Text style={{ fontFamily: 'montserrat' }}>Profile</Text>) : ('Profile')

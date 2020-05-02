@@ -39,7 +39,7 @@ export default (state = initialState, action) => {
 	switch(action.type) {
 		// 1. CRUD Actions
 		case CREATE_ENROLLMENT:
-			const newEnrollments = state.enrollments;
+			var newEnrollments = state.enrollments;
 			newEnrollments.push(action.payload);
 
 			return {
@@ -47,8 +47,8 @@ export default (state = initialState, action) => {
 				enrollments: newEnrollments
 			};
 		case DELETE_ENROLLMENT:
-			const newEnrollments = [];
-			const oldEnrollments = state.enrollment;
+			var newEnrollments = [];
+			var oldEnrollments = state.enrollment;
 
 			oldEnrollments.forEach((enrollment) => {
 				if (enrollment['id'] != action.payload) {

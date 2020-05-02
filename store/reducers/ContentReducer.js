@@ -40,7 +40,7 @@ export default (state = initialState, action) => {
 	switch(action.type) {
 		// 1. CRUD Actions
 		case CREATE_CONTENT:
-			const newContent = state.contents;
+			var newContent = state.contents;
 			newContent.push(action.payload);
 
 			return {
@@ -53,8 +53,8 @@ export default (state = initialState, action) => {
 				current_id: action.payload
 			};
 		case UPDATE_CONTENT:
-			const newContent = state.contents;
-			newContent.forEach((content) => {
+			var updateContent = state.contents;
+			updateContent.forEach((content) => {
 				if (content['id'] == action.payload['id']) {
 					content = action.payload;
 				}
@@ -62,11 +62,11 @@ export default (state = initialState, action) => {
 
 			return {
 				...state,
-				contents: newContent
+				contents: updateContent
 			};
 		case DELETE_CONTENT:
-			const newContent = [];
-			const oldContent = state.contents;
+			var newContent = [];
+			var oldContent = state.contents;
 
 			oldContent.forEach((content) => {
 				if (content['id'] != action.payload) {

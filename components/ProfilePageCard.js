@@ -1,6 +1,6 @@
 // Main Libraries
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Alert, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, Alert, ImageBackground, Dimensions, TouchableWithoutFeedback } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 // Actions
@@ -47,9 +47,13 @@ const ProfilePageCard = props => {
 	|  5. Functions          |
 	\* -------------------- */
 
-	const buttonPressHandler = () => {
-		dispatch(readRoadmap(props.roadmap_id));
-		props.navigation.navigate('RoadmapDetails');
+
+	const renderTitle = () => {
+		if (props.title.length > 32) {
+			return props.title.substring(0, 32) + '...';
+		} else {
+			return props.title;
+		}
 	};
 
 	/* -------------------- *\
@@ -57,25 +61,32 @@ const ProfilePageCard = props => {
 	\* -------------------- */
 
 	return (
-		<View onPress={buttonPressHandler} style={MainStyleSheet.container}>
+		<TouchableWithoutFeedback onPress={props.clickHandler.bind(this, props.roadmap_id)} style={{...MainStyleSheet.container, width: Dimensions.get('window').width * 0.5, height: Dimensions.get('window').width * 0.5 }}>
 			<View style={MainStyleSheet.row}>
-				<View style={MainStyleSheet.colOne}>
+				<View style={{...MainStyleSheet.colOne, padding: 0}}>
 					<ImageBackground source={{uri: props.coverImage}} style={styles.backgroundImage}>
-						<Text style={{...MainStyleSheet.headingThree, color: 'white'}}>{props.title}</Text>
-						<Text style={{...MainStyleSheet.text, color: 'white'}}>{props.enrolled} enrolled</Text>
+						<View style={styles.overlay} />
+						<View style={{width: '100%', height: '100%', padding: 8, justifyContent: 'flex-end'}}>
+							<Text style={{...MainStyleSheet.headingThree, color: 'white', marginBottom: 2}}>{renderTitle()}</Text>
+							<Text style={{...MainStyleSheet.text, color: 'white', fontSize: 12}}>{props.enrolled} enrolled</Text>
+						</View>
 					</ImageBackground>
 				</View>
 			</View>
-		</View>
+		</TouchableWithoutFeedback>
 	);
 };
 
 const styles = StyleSheet.create({
 	backgroundImage: {
-		flex: 1,
+		width: '100%',
+		height: '100%',
 		resizeMode: 'cover',
-		justifyContent: 'flex-end',
-		padding: 16
+		justifyContent: 'flex-end'
+	},
+	overlay: {
+		...StyleSheet.absoluteFillObject,
+		backgroundColor: 'rgba(0,0,0,0.35)'
 	}
 });
 

@@ -1,6 +1,6 @@
 // Main Libraries
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableWithoutFeedback, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 // Actions
@@ -52,27 +52,31 @@ const Button = props => {
 	\* -------------------- */
 
 	return (
-		<TouchableWithoutFeedback style={{...MainStyleSheet.container, ...styles.button, ...props.styles}} onPress={props.onPress}>
-			<View style={MainStyleSheet.row}>
-				<View style={MainStyleSheet.colOne}>
-					<Text style={{...styles.buttonText, ...props.textStyles}}>{props.buttonText}</Text>
-				</View>
-			</View>
-		</TouchableWithoutFeedback>
+		<TouchableOpacity style={{...styles.button, ...props.buttonStyles}} onPress={props.onPress}>
+			<Text style={{...styles.buttonText, ...props.textStyles}}>{props.buttonText}</Text>
+		</TouchableOpacity>
 	);
 };
 
 const styles = StyleSheet.create({
 	button: {
-		width: '100%',
 		backgroundColor: Colors.primary,
-		paddingVertical: 6,
-		paddingHorizontal: 12
+		paddingVertical: 12,
+		paddingHorizontal: 24,
+		borderRadius: 8,
+		marginVertical: 8,
+		shadowColor: '#0a0a0a',
+		shadowOpacity: 0.2,
+		shadowRadius: 4,
+		shadowOffset: {
+			width: 0,
+			height: 2
+		}
 	},
 	buttonText: {
 		fontFamily: 'montserrat-light',
 		textAlign: 'center',
-		fontSize: 14,
+		fontSize: 18,
 		color: 'white'
 	}
 });

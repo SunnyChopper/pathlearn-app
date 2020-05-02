@@ -17,7 +17,8 @@ import {
 	GET_ROADMAPS,
 	GET_ROADMAPS_FOR_CATEGORY,
 	GET_ROADMAPS_FOR_TOPIC,
-	GET_ROADMAPS_FOR_USER
+	GET_ROADMAPS_FOR_USER,
+	GET_ROADMAPS_BY_QUERY
 } from '../types.js';
 
 import { app_uri } from '../../constants/env.js';
@@ -235,6 +236,38 @@ export const getRoadmapsForUser = (user_id) => {
 				dispatch({ type: ROADMAP_LOADING, payload: false });
 			}
 		}).catch(function(error) {
+			dispatch({ type: ROADMAP_ERROR, payload: error });
+			dispatch({ type: ROADMAP_LOADING, payload: false });
+		});
+	};
+};
+
+export const getRoadmapsByQuery = (query) => {
+	return (dispatch) => {
+		// Loading for frontend
+		dispatch({ type: ROADMAP_LOADING, payload: true });
+
+		// Send GET Request
+		axios.get(app_uri + '/api/roadmaps/search?q=' + query).then(function(response) {
+			if (response.data['success'] == true) {
+				// Save data
+				dispatch({ type: GET_ROADMAPS_BY_QUERY, payload: response.data['roadmaps'] });
+
+				// Directional data
+				dispatch({ type: ROADMAP_DIRECTION, payload: 'get_roadmaps_by_query' });
+				dispatch({ type: ROADMAP_SUCCESS, payload: true });
+				dispatch({ type: ROADMAP_LOADING, payload: false });
+			} else {
+				// Directional data
+				dispatch({ type: ROADMAP_ERROR, payload: response.data['error'] });
+				dispatch({ type: ROADMAP_LOADING, payload: false });
+			}
+		}).catch(function(error) {
+			// Console log error
+			console.log('[ERROR] - Error within `getRoadmapsByQuery` action:');
+			console.log(error);
+
+			// Directional data
 			dispatch({ type: ROADMAP_ERROR, payload: error });
 			dispatch({ type: ROADMAP_LOADING, payload: false });
 		});

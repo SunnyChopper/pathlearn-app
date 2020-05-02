@@ -39,7 +39,7 @@ export default (state = initialState, action) => {
 	switch(action.type) {
 		// 1. CRUD Actions
 		case CREATE_SECTION:
-			const newSections = state.sections;
+			var newSections = state.sections;
 			newSections.push(action.payload);
 
 			return {
@@ -52,7 +52,7 @@ export default (state = initialState, action) => {
 				current_id: action.payload
 			};
 		case UPDATE_SECTION:
-			const newSections = state.sections;
+			var newSections = state.sections;
 			newSections.forEach((section) => {
 				if (section['id'] == action.payload['id']) {
 					section = action.payload;
@@ -63,9 +63,9 @@ export default (state = initialState, action) => {
 				...state,
 				sections: newSections
 			};
-		case DELETE_ROADMAP:
-			const newSections = [];
-			const oldSections = state.sections;
+		case DELETE_SECTION:
+			var newSections = [];
+			var oldSections = state.sections;
 
 			oldSections.forEach((section) => {
 				if (section['id'] != action.payload) {

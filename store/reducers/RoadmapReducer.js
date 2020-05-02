@@ -17,11 +17,13 @@ import {
 	GET_ROADMAPS,
 	GET_ROADMAPS_FOR_CATEGORY,
 	GET_ROADMAPS_FOR_TOPIC,
-	GET_ROADMAPS_FOR_USER
+	GET_ROADMAPS_FOR_USER,
+	GET_ROADMAPS_BY_QUERY
 } from '../types.js';
 
 const initialState = {
 	roadmaps: [],
+	query_roadmaps: [],
 	current_id: 0,
 	direction: '',
 	loading: false,
@@ -42,7 +44,7 @@ export default (state = initialState, action) => {
 	switch(action.type) {
 		// 1. CRUD Actions
 		case CREATE_ROADMAP:
-			const newRoadmaps = state.roadmaps;
+			var newRoadmaps = state.roadmaps;
 			newRoadmaps.push(action.payload);
 
 			return {
@@ -55,7 +57,7 @@ export default (state = initialState, action) => {
 				current_id: action.payload
 			};
 		case UPDATE_ROADMAP:
-			const newRoadmaps = state.roadmaps;
+			var newRoadmaps = state.roadmaps;
 			newRoadmaps.forEach((roadmap) => {
 				if (roadmap['id'] == action.payload['id']) {
 					roadmap = action.payload;
@@ -67,8 +69,8 @@ export default (state = initialState, action) => {
 				roadmaps: newRoadmaps
 			};
 		case DELETE_ROADMAP:
-			const newRoadmaps = [];
-			const oldRoadmaps = state.roadmaps;
+			var newRoadmaps = [];
+			var oldRoadmaps = state.roadmaps;
 
 			oldRoadmaps.forEach((roadmap) => {
 				if (roadmap['id'] != action.payload) {
@@ -109,7 +111,7 @@ export default (state = initialState, action) => {
 				roadmaps: action.payload
 			};
 		case GET_ROADMAPS_FOR_CATEGORY:
-			const newRoadmaps = state.roadmaps;
+			var newRoadmaps = state.roadmaps;
 			newRoadmaps.concat(action.payload);
 
 			return {
@@ -117,21 +119,26 @@ export default (state = initialState, action) => {
 				roadmaps: newRoadmaps
 			};
 		case GET_ROADMAPS_FOR_TOPIC:
-			const newRoadmaps = state.roadmaps;
+			var newRoadmaps = state.roadmaps;
 			newRoadmaps.concat(action.payload);
 
 			return {
 				...state,
 				roadmaps: newRoadmaps
 			};
-		case GET_TOPICS_FOR_USER:
-			const newRoadmaps = state.roadmaps;
+		case GET_ROADMAPS_FOR_USER:
+			var newRoadmaps = state.roadmaps;
 			newRoadmaps.concat(action.payload);
 
 			return {
 				...state,
 				roadmaps: newRoadmaps
-			}
+			};
+		case GET_ROADMAPS_BY_QUERY:
+			return {
+				...state,
+				query_roadmaps: action.payload
+			};
 		default:
 			return state;
 	}	

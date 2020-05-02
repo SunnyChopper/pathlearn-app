@@ -13,7 +13,11 @@ import {
 	USER_ERROR,
 
 	// 4. Helper
-	LOGIN_USER
+	LOGIN_USER,
+	IS_LOGGED_IN,
+	SET_USER,
+	LOGOUT_USER,
+	INITIAL_CATEGORIES
 } from '../types.js';
 
 const initialState = {
@@ -23,7 +27,8 @@ const initialState = {
 	loading: false,
 	success: false,
 	error: '',
-	logged_in: false
+	logged_in: false,
+	initial_categories: false
 };
 
 /* ----------------------- *\
@@ -43,7 +48,8 @@ export default (state = initialState, action) => {
 				...state,
 				user: action.payload,
 				current_id: action.payload['id'],
-				logged_in: true
+				logged_in: true,
+				initial_categories: false
 			};
 		case UPDATE_USER:
 			return {
@@ -81,11 +87,44 @@ export default (state = initialState, action) => {
 			};
 		// 4. Helper Actions
 		case LOGIN_USER:
+			var initial_categories = false;
+			if (action.payload['initial_categories'] == 1) {
+				initial_categories = true;
+			}
+
 			return {
 				...state,
 				user: action.payload,
 				current_id: action.payload['id'],
-				logged_in: true
+				logged_in: true,
+				initial_categories: initial_categories
+			};
+		case IS_LOGGED_IN:
+			return {
+				...state,
+				logged_in: action.payload
+			};
+		case SET_USER:
+			var initial_categories = false;
+			if (action.payload['initial_categories'] == 1) {
+				initial_categories = true;
+			}
+
+			return {
+				...state,
+				user: action.payload,
+				current_id: action.payload['id']
+			};
+		case LOGOUT_USER:
+			return {
+				...state,
+				logged_in: false,
+				user: []
+			};
+		case INITIAL_CATEGORIES:
+			return {
+				...state,
+				initial_categories: action.payload
 			};
 		default:
 			return state;

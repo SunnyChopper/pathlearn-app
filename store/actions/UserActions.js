@@ -13,9 +13,14 @@ import {
 	USER_ERROR,
 
 	// 4. Helper
-	LOGIN_USER
+	LOGIN_USER,
+	IS_LOGGED_IN,
+	SET_USER,
+	LOGOUT_USER,
+	INITIAL_CATEGORIES
 } from '../types.js';
 
+import { AsyncStorage } from 'react-native';
 import { app_uri } from '../../constants/env.js';
 import axios from 'axios';
 
@@ -34,7 +39,11 @@ import axios from 'axios';
 
 export const createUser = (first_name, last_name, username, password, mode) => {
 	return (dispatch) => {
-		const postVariables = {
+		// Loading for front-end
+		dispatch({ type: USER_LOADING, payload: true });
+
+		// POST Params
+		const params = {
 			first_name: first_name,
 			last_name: last_name,
 			username: username,
@@ -42,18 +51,35 @@ export const createUser = (first_name, last_name, username, password, mode) => {
 			mode: mode
 		};
 
-		axios.post(app_uri + '/api/users/create', postVariables).then(function(response) {
+		// Create POST request
+		axios.post(app_uri + '/api/users/create', params).then(function(response) {
 			if (response.data['success'] == true) {
+				// Save user data
 				dispatch({ type: CREATE_USER, payload: response.data['user'] });
 
+				// Save data to device hard drive
+				AsyncStorage.setItem('logged_in', JSON.stringify({
+					logged_in: true
+				}));
+				AsyncStorage.setItem('current_user', JSON.stringify({
+					current_user: response.data['user']
+				}));
+
+				// Directional data
 				dispatch({ type: USER_DIRECTION, payload: 'create_user' });
 				dispatch({ type: USER_SUCCESS, payload: true });
 				dispatch({ type: USER_LOADING, payload: false });
 			} else {
+				// Directional data
 				dispatch({ type: USER_ERROR, payload: response.data['error'] });
 				dispatch({ type: USER_LOADING, payload: false });
 			}
 		}).catch(function(error) {
+			// Console log the error
+			console.log('[ERROR] - Error within `createUser` action.');
+			console.log(error);
+
+			// Directional data
 			dispatch({ type: USER_ERROR, payload: error });
 			dispatch({ type: USER_LOADING, payload: false });
 		});
@@ -62,7 +88,9 @@ export const createUser = (first_name, last_name, username, password, mode) => {
 
 export const updateUser = (user_id, first_name, last_name, username, password, mode) => {
 	return (dispatch) => {
-		const postVariables = {
+
+		// Construct parameter object
+		const params = {
 			first_name: first_name,
 			last_name: last_name,
 			username: username,
@@ -70,7 +98,8 @@ export const updateUser = (user_id, first_name, last_name, username, password, m
 			mode: mode
 		};
 
-		axios.post(app_uri + '/api/users/update', postVariables).then(function(response) {
+		// Sent POST Request
+		axios.post(app_uri + '/api/users/update', params).then(function(response) {
 			if (response.data['success'] == true) {
 				dispatch({ type: CREATE_USER, payload: response.data['user'] });
 
@@ -85,6 +114,8 @@ export const updateUser = (user_id, first_name, last_name, username, password, m
 			dispatch({ type: USER_ERROR, payload: error });
 			dispatch({ type: USER_LOADING, payload: false });
 		});
+
+
 	};
 };
 
@@ -154,23 +185,101 @@ export const userError = (error) => {
 
 export const loginUser = (username, password) => {
 	return (dispatch) => {
-		const postVariables = {
+		// Loading for front-end
+		dispatch({ type: USER_LOADING, payload: true });
+
+		// POST params
+		const params = {
 			username: username,
 			password: password
 		};
 
-		axios.post(app_uri + '/api/users/login', postVariables).then(function(response) {
+		// Send POST request
+		axios.post(app_uri + '/api/users/login', params).then(function(response) {
 			if (response.data['success'] == true) {
+				// Save user data
 				dispatch({ type: LOGIN_USER, payload: response.data['user'] });
 
+				// Save data to device hard drive
+				AsyncStorage.setItem('logged_in', JSON.stringify({
+					logged_in: true
+				}));
+				AsyncStorage.setItem('current_user', JSON.stringify({
+					current_user: response.data['user']
+				}));
+
+				// Directional data
 				dispatch({ type: USER_DIRECTION, payload: 'login_user' });
 				dispatch({ type: USER_SUCCESS, payload: true });
 				dispatch({ type: USER_LOADING, payload: false });
 			} else {
+				// Directional data
 				dispatch({ type: USER_ERROR, payload: response.data['error'] });
 				dispatch({ type: USER_LOADING, payload: false });
 			}
 		}).catch(function(error) {
+			// Console log the error
+			console.log('[ERROR] - Error in `loginUser`.');
+			console.log(error);
+
+			// Directional data
+			dispatch({ type: USER_ERROR, payload: error });
+			dispatch({ type: USER_LOADING, payload: false });
+		});
+	};
+};
+
+export const isLoggedIn = (logged_in) => {
+	return {
+		type: IS_LOGGED_IN,
+		payload: logged_in
+	};
+};
+
+export const setUser = (user) => {
+	return {
+		type: SET_USER,
+		payload: user
+	};
+};
+
+export const logoutUser = () => {
+	AsyncStorage.removeItem('logged_in');
+	AsyncStorage.removeItem('current_user');
+
+	return {
+		type: LOGOUT_USER,
+		payload: null
+	};
+};
+
+export const initialCategories = (user_id) => {
+	return (dispatch) => {
+		// Loading for front-end
+		dispatch({ type: USER_LOADING, payload: true });
+
+		// POST Params
+		const params = {
+			user_id: user_id
+		};
+
+		// Send POST Request
+		axios.post(app_uri + '/api/users/toggle-initial-categories', params).then((response) => {
+			if (response.data['success'] == true) {
+				// Data
+				dispatch({ type: INITIAL_CATEGORIES, payload: true });
+
+				// Directional data
+				dispatch({ type: USER_DIRECTION, payload: 'initial_categories' });
+				dispatch({ type: USER_SUCCESS, payload: true });
+				dispatch({ type: USER_LOADING, payload: false });
+			}
+		}).catch((error) => {
+			// Console log error
+			console.log('[ERROR] - Error within `initialCategories` action:');
+			console.log(error);
+
+			// Directional data
 			dispatch({ type: USER_ERROR, payload: error });
 			dispatch({ type: USER_LOADING, payload: false });
 		});

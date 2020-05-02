@@ -1,6 +1,6 @@
 // Main Libraries
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet, Alert, Image, ImageBackground, TouchableWithoutFeedback } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 // Actions
@@ -47,9 +47,14 @@ const FullRoadmapCard = props => {
 	|  5. Functions          |
 	\* -------------------- */
 
-	const buttonPressHandler = () => {
-		dispatch(readRoadmap(props.roadmap_id));
-		props.navigation.navigate('RoadmapDetails');
+	const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+	const renderTimestamp = () => {
+		var date = new Date(props.enrollmentDate);
+		var day = date.getDate();
+		var month = date.getMonth();
+		var year = date.getFullYear();
+		return monthNames[month] + " " + day.toString() + ", " + year.toString();
 	};
 
 	/* -------------------- *\
@@ -57,34 +62,36 @@ const FullRoadmapCard = props => {
 	\* -------------------- */
 
 	return (
-		<View onPress={buttonPressHandler} style={{...MainStyleSheet.container, ...styles.card}}>
-			<View style={MainStyleSheet.row}>
-				<View style={MainStyleSheet.colOne}>
-					<ImageBackground source={{uri: props.cover_image}} style={styles.coverImage}></ImageBackground>
-				</View>
-			</View>
-
-			<View style={MainStyleSheet.row}>
-				<View style={{...MainStyleSheet.colOne, padding: 16}}>
-					<Text style={{...MainStyleSheet.headingOne, color: Colors.primary}}>{props.title}</Text>
-					<Text style={MainStyleSheet.text}>{props.description}</Text>
-				</View>
-			</View>
-
-			<View style={MainStyleSheet.row}>
-				<View style={{...MainStyleSheet.colOneHalf, , padding: 16}}>
-					{props.enrollmentCard === true ? (
-						<Text style={MainStyleSheet.text}>Enrolled on {props.enrollmentDate}</Text>
-					) : (
-						<Text style={MainStyleSheet.text}>{props.numberEnrolled} enrolled</Text>
-					)}
+		<TouchableWithoutFeedback onPress={props.onPress.bind(this, props.roadmap_id)}>
+			<View style={{...MainStyleSheet.container, ...styles.card, ...props.cardStyles}}>
+				<View style={{...MainStyleSheet.row, borderTopRightRadius: 8, borderTopLeftRadius: 8, overflow: 'hidden' }}>
+					<View style={{...MainStyleSheet.colOne, padding: 0}}>
+						<ImageBackground source={{uri: props.cover_image}} style={styles.coverImage}></ImageBackground>
+					</View>
 				</View>
 
-				<View style={MainStyleSheet.colOneHalf}>
-					<Text style={{...MainStyleSheet.text, textAlign: 'right'}}>{props.category}</Text>
+				<View style={{...MainStyleSheet.row, paddingHorizontal: 16, paddingVertical: 16, paddingBottom: 0}}>
+					<View style={{...MainStyleSheet.colOne}}>
+						<Text style={{...MainStyleSheet.headingTwo, color: Colors.primary}}>{props.title}</Text>
+						<Text style={{...MainStyleSheet.text, fontSize: 14, lineHeight: 21}}>{props.description}</Text>
+					</View>
+				</View>
+
+				<View style={MainStyleSheet.row}>
+					<View style={{...MainStyleSheet.colTwoThirds, paddingBottom: 16, paddingHorizontal: 16, paddingTop: 8}}>
+						{props.enrollmentCard === true ? (
+							<Text style={{...MainStyleSheet.text, fontSize: 13, color: '#4a4a4a'}}>Enrolled on {renderTimestamp()}</Text>
+						) : (
+							<Text style={{...MainStyleSheet.text, fontSize: 13, color: '#4a4a4a'}}>{props.numberEnrolled} enrolled</Text>
+						)}
+					</View>
+
+					<View style={{...MainStyleSheet.colOneThird, paddingBottom: 16, paddingHorizontal: 16, paddingTop: 8}}>
+						<Text style={{...MainStyleSheet.text, fontSize: 13, textAlign: 'right', color: Colors.darkAccents}}>{props.category}</Text>
+					</View>
 				</View>
 			</View>
-		</View>
+		</TouchableWithoutFeedback>
 	);
 };
 

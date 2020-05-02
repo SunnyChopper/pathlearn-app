@@ -1,6 +1,6 @@
 // Main Libraries
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet, Alert, Image, ImageBackground, TouchableWithoutFeedback } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 // Actions
@@ -47,9 +47,12 @@ const VerticalRoadmapCard = props => {
 	|  5. Functions          |
 	\* -------------------- */
 
-	const buttonPressHandler = () => {
-		dispatch(readRoadmap(props.roadmap_id));
-		props.navigation.navigate('RoadmapDetails');
+	const renderDescription = () => {
+		if (props.description.length > 120) {
+			return props.description.substring(0, 119) + '...';
+		} else {
+			return props.description;
+		}
 	};
 
 	/* -------------------- *\
@@ -57,28 +60,29 @@ const VerticalRoadmapCard = props => {
 	\* -------------------- */
 
 	return (
-		<View onPress={buttonPressHandler} style={{...MainStyleSheet.container, ...styles.card}}>
-			<View style={MainStyleSheet.row}>
-				<View style={MainStyleSheet.colOne}>
-					<ImageBackground source={{uri: props.cover_image}} style={styles.coverImage}></ImageBackground>
+		<TouchableWithoutFeedback onPress={props.onPress.bind(this, props.roadmap_id)}>
+			<View style={{...MainStyleSheet.container, ...styles.card}}>
+				<View style={{...MainStyleSheet.row, borderTopLeftRadius: 8, borderTopRightRadius: 8, overflow: 'hidden' }}>
+					<View style={{...MainStyleSheet.colOne, padding: 0}}>
+						<ImageBackground source={{uri: props.cover_image}} style={styles.coverImage}></ImageBackground>
+					</View>
 				</View>
-			</View>
 
-			<View style={MainStyleSheet.row}>
-				<View style={{...MainStyleSheet.colOne, padding: 16}}>
-					<Text style={{...MainStyleSheet.headingOne, color: Colors.primary}}>{props.title}</Text>
-					<Text style={MainStyleSheet.text}>{props.description}</Text>
-					<Text style={MainStyleSheet.text}>{props.numberEnrolled} enrolled</Text>
-					<Text style={{...MainStyleSheet.text, textAlign: 'right'}}>{props.category}</Text>
+				<View style={MainStyleSheet.row}>
+					<View style={{...MainStyleSheet.colOne, padding: 16}}>
+						<Text style={{...MainStyleSheet.headingThree, color: Colors.primary}}>{props.title}</Text>
+						<Text style={{...MainStyleSheet.text, fontSize: 13, lineHeight: 20}}>{renderDescription()}</Text>
+						<Text style={{...MainStyleSheet.text, fontSize: 12, marginTop: 4}}>{props.numberEnrolled} enrolled</Text>
+					</View>
 				</View>
 			</View>
-		</View>
+		</TouchableWithoutFeedback>
 	);
 };
 
 const styles = StyleSheet.create({
 	card: {
-		width: 200,
+		width: 225,
 		borderRadius: 8,
 		shadowColor: '#0a0a0a',
 		shadowOpacity: 0.25,
@@ -88,10 +92,11 @@ const styles = StyleSheet.create({
 			height: 2
 		},
 		elevation: 4,
-		backgroundColor: Colors.lightBackground
+		backgroundColor: Colors.lightBackground,
+		marginRight: 16
 	},
 	coverImage: {
-		height: 50,
+		height: 125,
 		width: '100%',
 		borderTopLeftRadius: 8,
 		borderTopRightRadius: 8,

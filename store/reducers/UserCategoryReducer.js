@@ -1,23 +1,21 @@
 import {
 	// 1. CRUD
-	CREATE_TOPIC,
-	READ_TOPIC,
+	CREATE_USER_CATEGORIES,
 
 	// 2. Directional
-	TOPIC_DIRECTION,
+	USER_CATEGORIES_DIRECTION,
 
 	// 3. Status
-	TOPIC_LOADING,
-	TOPIC_SUCCESS,
-	TOPIC_ERROR,
+	USER_CATEGORIES_LOADING,
+	USER_CATEGORIES_SUCCESS,
+	USER_CATEGORIES_ERROR,
 
 	// 4. Helper
-	GET_TOPICS,
-	GET_TOPICS_FOR_CATEGORY
+	GET_USER_CATEGORIES
 } from '../types.js';
 
 const initialState = {
-	topics: [],
+	categories: [],
 	current_id: 0,
 	direction: '',
 	loading: false,
@@ -37,54 +35,39 @@ const initialState = {
 export default (state = initialState, action) => {
 	switch(action.type) {
 		// 1. CRUD Actions
-		case CREATE_TOPIC:
-			var newTopics = state.topics;
-			newTopics.push(action.payload);
-
+		case CREATE_USER_CATEGORIES:
 			return {
 				...state,
-				topics: newTopics
-			};
-		case READ_TOPIC:
-			return {
-				...state,
-				current_id: action.payload
+				categories: action.payload
 			};
 		// 2. Directional Actions
-		case TOPIC_DIRECTION:
+		case USER_CATEGORIES_DIRECTION:
 			return {
 				...state,
 				direction: action.payload
 			};
 		// 3. Status Actions
-		case TOPIC_LOADING:
+		case USER_CATEGORIES_LOADING:
 			return {
 				...state,
 				loading: action.payload
 			};
-		case TOPIC_SUCCESS:
+		case USER_CATEGORIES_SUCCESS:
 			return {
 				...state,
 				success: action.payload
 			};
-		case TOPIC_ERROR:
+		case USER_CATEGORIES_ERROR:
 			return {
 				...state,
 				error: action.payload
 			};
 		// 4. Helper Actions
-		case GET_TOPICS:
+		case GET_USER_CATEGORIES:
 			return {
 				...state,
-				topics: action.payload
+				categories: action.payload
 			};
-		case GET_TOPICS_FOR_CATEGORY:
-			var newTopics = state.topics;
-			newTopics.concat(action.payload);
-			return {
-				...state,
-				topics: newTopics
-			}
 		default:
 			return state;
 	}	

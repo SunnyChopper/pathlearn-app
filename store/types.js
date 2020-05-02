@@ -74,6 +74,7 @@ export const GET_ROADMAPS = 'get_roadmaps';
 export const GET_ROADMAPS_FOR_CATEGORY = 'get_roadmaps_for_category';
 export const GET_ROADMAPS_FOR_TOPIC = 'get_roadmaps_for_topic';
 export const GET_ROADMAPS_FOR_USER = 'get_roadmaps_for_user';
+export const GET_ROADMAPS_BY_QUERY = 'get_roadmaps_by_query';
 
 /* ---------------- *\
 |  Enrollments       |
@@ -178,3 +179,30 @@ export const USER_ERROR = 'user_error';
 
 // 4. Helper Functions for User
 export const LOGIN_USER = 'login_user';
+export const IS_LOGGED_IN = 'is_logged_in';
+export const SET_USER = 'set_user';
+export const LOGOUT_USER = 'logout_user';
+export const INITIAL_CATEGORIES = 'initial_categories';
+
+/* ---------------- *\
+|  User Categories   |
+|--------------------|
+|  1. CRUD           |
+|  2. Directional    |
+|  3. Status         |
+|  4. Helper         |
+\* -----------------*/
+
+// 1. CRUD for User Categories
+export const CREATE_USER_CATEGORIES = 'create_user_categories';
+
+// 2. Directional for User Categories
+export const USER_CATEGORIES_DIRECTION = 'user_categories_direction';
+
+// 3. Status for User Categories
+export const USER_CATEGORIES_LOADING = 'user_categories_loading';
+export const USER_CATEGORIES_SUCCESS = 'user_categories_success';
+export const USER_CATEGORIES_ERROR = 'user_categories_error';
+
+// 4. Helper Functions for User Categories
+export const GET_USER_CATEGORIES = 'get_user_categories';

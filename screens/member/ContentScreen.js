@@ -1,21 +1,20 @@
-// Main Libraries
+// System Libraries
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView, Text, Image, Alert, ActivityIndicator } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
+import { WebView } from 'react-native-webview';
 
 // Actions
 
-
 // Components
 
-
 // Styling
-import MainStyleSheet from '../styles/MainStyleSheet';
-import Colors from '../constants/Colors';
+import Colors from '../../constants/Colors';
+import MainStyleSheet from '../../styles/MainStyleSheet';
 
-const Input = props => {
+const ContentScreen = props => {
 	/* --------------------- *\
-	|  Component              |
+	|  Screen                 |
 	|-------------------------|
 	|  1. Dispatch            |
 	|  2. State variables     |
@@ -35,6 +34,8 @@ const Input = props => {
 	|  2. State variables    |
 	\* -------------------- */
 
+	const url_link = props.navigation.getParam('url_link', '');
+
 	/* -------------------- *\
 	|  3. Selectors          |
 	\* -------------------- */
@@ -52,23 +53,19 @@ const Input = props => {
 	\* -------------------- */
 
 	return (
-		<TextInput placeholderTextColor={'#6a6a6a'} onChangeText={props.onTextChange} placeholder={props.placeholder} value={props.value} style={{...styles.input, ...props.textStyles}} multiline={props.multiline} {...props} />
+		<View style={MainStyleSheet.screen}>
+			<View style={{...MainStyleSheet.container, flex: 1, backgroundColor: '#4a4a4a'}}>
+				<WebView scalesPageToFit={true} source={{ uri: url_link }} style={styles.webView} />
+			</View>
+		</View>
 	);
 };
 
 const styles = StyleSheet.create({
-	input: {
+	webView: {
 		width: '100%',
-		borderBottomColor: Colors.primary,
-		borderBottomWidth: 4,
-		backgroundColor: Colors.lightBackground,
-		marginVertical: 6,
-		paddingHorizontal: 8,
-		paddingVertical: 12,
-		fontSize: 16,
-		borderRadius: 8,
-		fontFamily: 'montserrat-light'
+		height: '100%',
+		flex: 1
 	}
 });
-
-export default Input;
+export default ContentScreen;
